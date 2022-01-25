@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %} - Bucket List</title>
+    {% block stylesheet %}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" alt="logo">
+    {% endblock %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto"/>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon/favicon-32x32.png') }}">
+</head>
+<body>
+<header>
+    <div class="title">
+        <div id="logo"><img src="{{ asset('img/logo.png') }}"></div>
+        <h1>Bucket List</h1>
+        <hr>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="{{ path('main') }}">Accueil</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    {% block main %}{% endblock %}
+</main>
+<footer>
+    &copy; Bucket-List - {{ date() | date("Y") }}
+</footer>
+</body>
+</html>
