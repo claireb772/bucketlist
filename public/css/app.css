@@ -19,13 +19,22 @@ header {
 }
 
 nav {
-    background-color: darkgrey;
+    background-color: gainsboro;
     border-radius: 0px 0px 5px 5px;
     margin-bottom: 20px;
 }
 
+
+nav ul {
+    display: flex;
+    justify-content: left;
+}
+
 nav li {
     list-style: none;
+    display: flex;
+    justify-content: left;
+    margin-right:30px;
 }
 
 footer {
@@ -45,5 +54,5 @@ footer {
 }
 
 main {
-    height: 600px;
+    height: 650px;
 }
