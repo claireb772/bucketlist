@@ -1,6 +1,10 @@
 body {
     font-family: "Roboto";
 }
+main {
+    margin: 20px;
+    height: 650px;
+}
 a {
     outline: none;
     text-decoration: none;
@@ -53,6 +57,3 @@ footer {
     align-items: center;
 }
 
-main {
-    height: 650px;
-}

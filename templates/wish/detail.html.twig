@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %}   wish #{{ id }} {% endblock %}
+{% block title %}  {{ wish.title }} {% endblock %}
 
 {% block main %}
-idea detail
+    <h1>{{ wish.title }}</h1>
+    <h3>par {{ wish.author }}, le {{ wish.dateCreated | date('d-m-Y à H:i') }}</h3>
+    <p>{{ wish.description }}</p>
 {% endblock %}
