@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Wish;
+use App\Form\WishType;
+use App\Repository\CategoryRepository;
 use App\Repository\WishRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +19,7 @@ class WishController extends AbstractController
     #[Route('/list', name: 'wish_list')]
     public function list(WishRepository $repo): Response
     {
-        $wishes = $repo ->findBy(['isPublished'=>true], ['dateCreated' => 'DESC']);
+        $wishes = $repo ->findPublishedWishesWithCategory();
         return $this->render('wish/list.html.twig', ['wishes' =>$wishes]);
     }
 
@@ -30,9 +33,10 @@ class WishController extends AbstractController
         return $this->render('wish/detail.html.twig', ['wish'=>$wish]);
     }
 
-    #[Route('/ajouterJeuDEssai', name: 'wish_add')]
-    public function ajouterJeuDEssai(EntityManagerInterface $em){
+    #[Route('/ajouterJeuDEssai', name: 'wish_ajout')]
+    public function ajouterJeuDEssai(EntityManagerInterface $em, CategoryRepository $categoryRepository){
         $wish = new Wish();
+
         $wish ->setTitle("Aller en Nouvelle-Zélande")
                 ->setAuthor("Claire")
                 ->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -41,9 +45,28 @@ class WishController extends AbstractController
                 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
             ->setIsPublished(true)
             ->setDateCreated(new \DateTime());
+        $cat = $categoryRepository->findByName('Travel and Adventure')[0];
+        $wish ->setCategory($cat);
         $em->persist($wish);
         $em->flush();
-        return $this ->render('wish/list.html.twig');
+        return new Response("Jeu d'essai inséré");
+    }
+
+    #[Route('/add', name: 'wish_add')]
+    public function add(Request $request, EntityManagerInterface $em){
+        $wish = new Wish();
+        $wish->setIsPublished(true)
+            ->setDateCreated(new \DateTime());
+        $formbuilder = $this->createForm(WishType::class, $wish);
+        $formbuilder->handleRequest($request);
+        if($formbuilder->isSubmitted() && $formbuilder->isValid()) {
+            $em->persist($wish);
+            $em->flush();
+            $this->addFlash('success', "Idea successfully added!");
+            return  $this->redirectToRoute('wish_detail', ['num'=>$wish->getId()]);
+        }
+        $wishform = $formbuilder->createView();
+        return $this ->render('wish/add.html.twig', ['wishform'=>$wishform]);
     }
 
 }

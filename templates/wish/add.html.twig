@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% form_theme wishform 'bootstrap_5_layout.html.twig' %}
+    <h1>Make a new wish</h1>
+    {{ form_start(wishform) }}
+    {{ form_widget(wishform) }}
+    <input type="submit" value="Send !">
+    {{ form_end(wishform) }}
+{% endblock %}

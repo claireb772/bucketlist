@@ -21,6 +21,12 @@ header {
     display: flex;
     flex-direction: column;
 }
+.form-control {
+    width: auto!important;
+}
+.form-select {
+    width: auto!important;
+}
 
 nav {
     background-color: gainsboro;

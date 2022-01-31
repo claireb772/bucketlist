@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\WishRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: WishRepository::class)]
 class Wish
@@ -14,12 +16,14 @@ class Wish
     private $id;
 
     #[ORM\Column(type: 'string', length: 250)]
+    #[Assert\NotBlank(message: 'Please provide a title for the wish')]
     private $title;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
     #[ORM\Column(type: 'string', length: 50)]
+    #[Assert\NotBlank(message: 'Please provide the name of the wish\'s author')]
     private $author;
 
     #[ORM\Column(type: 'boolean')]
@@ -27,6 +31,10 @@ class Wish
 
     #[ORM\Column(type: 'datetime')]
     private $dateCreated;
+
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'wishes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $category;
 
     public function getId(): ?int
     {
@@ -92,4 +100,17 @@ class Wish
 
         return $this;
     }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
 }
