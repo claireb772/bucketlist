@@ -14,16 +14,25 @@
 <header>
     <div class="title">
         <div id="logo"><img src="{{ asset('img/logo.png') }}"></div>
-        <h1>Bucket List</h1>
+        {% if app.user %}
+            <h1>Bucket List - Hello {{ app.user.username }} !</h1>
+        {% else %}
+            <h1>Bucket List</h1>
+        {% endif %}
         <hr>
     </div>
     <nav class="bucketlist">
         <ul>
             <li><a href="{{ path('main_home') }}">Accueil</a></li>
             <li><a href="{{ path('wish_list') }}">Wish List</a> </li>
-            <li><a href="{{ path('wish_add') }}">Add a wish</a> </li>
             <li><a href="{{ path('main_about') }}">About us</a> </li>
-
+            {% if app.user %}
+            <li><a href="{{ path('logout') }}">Logout</a> </li>
+            <li><a href="{{ path('wish_add') }}">Add your idea</a> </li>
+            {% else %}
+            <li><a href="{{ path('login') }}">Login</a> </li>
+            <li><a href="{{ path('app_register') }}">Register</a> </li>
+            {% endif %}
         </ul>
     </nav>
 </header>
