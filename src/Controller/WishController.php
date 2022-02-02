@@ -24,15 +24,28 @@ class WishController extends AbstractController
         return $this->render('wish/list.html.twig', ['wishes' =>$wishes]);
     }
 
-    #[Route('/detail/{num}', name: 'wish_detail', requirements: ['num' => '\d+'])]
-    public function detail($num, WishRepository $repo): Response
+    #[Route('/detail/{id}', name: 'wish_detail', requirements: ['id' => '\d+'])]
+    public function detail(Wish $wish): Response
     {
-        $wish = $repo->find($num);
-        if(!$wish){
-            throw new NotFoundHttpException();
-        }
         return $this->render('wish/detail.html.twig', ['wish'=>$wish]);
     }
+
+    /* #[Route('/detail/{id}', name: 'wish_detail', requirements: ['id' => '\d+'])]
+     public function detail($id, WishRepository $repo): Response
+     {
+         $wish = $repo->find($id);
+         if(!$wish){
+             throw new NotFoundHttpException();
+         }
+         return $this->render('wish/detail.html.twig', ['wish'=>$wish]);
+     }*/
+
+    #[Route('/detail/{title}', name: 'wish_detailbytitle')]
+    public function detailByTitle(Wish $wish): Response
+    {
+        return $this->render('wish/detail.html.twig', ['wish'=>$wish]);
+    }
+
 
     #[Route('/ajouterJeuDEssai', name: 'wish_ajout')]
     public function ajouterJeuDEssai(EntityManagerInterface $em, CategoryRepository $categoryRepository){
