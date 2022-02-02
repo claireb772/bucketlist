@@ -6,6 +6,7 @@ use App\Entity\Wish;
 use App\Form\WishType;
 use App\Repository\CategoryRepository;
 use App\Repository\WishRepository;
+use App\Service\Censurator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,7 +54,11 @@ class WishController extends AbstractController
     }
 
     #[Route('/add', name: 'wish_add')]
-    public function add(Request $request, EntityManagerInterface $em){
+    public function add(Request $request, EntityManagerInterface $em, Censurator $censurator){
+        if(!$this->isGranted('ROLE_USER')) {
+            $this->addFlash('notice', 'please login...');
+            return $this->redirectToRoute('app_login');
+        }
         $wish = new Wish();
         $wish->setIsPublished(true)
             ->setDateCreated(new \DateTime());
@@ -62,6 +67,8 @@ class WishController extends AbstractController
 
         $formbuilder->handleRequest($request);
         if($formbuilder->isSubmitted() && $formbuilder->isValid()) {
+            $descriptionAVerifier = $wish->getDescription();
+            $wish->setDescription($censurator->purify($descriptionAVerifier));
             $em->persist($wish);
             $em->flush();
             $this->addFlash('success', "Idea successfully added!");
