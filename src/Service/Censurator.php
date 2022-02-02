@@ -8,16 +8,14 @@ class Censurator
 
     public function purify(String $text){
 
-        /*
-         * preg_match($motsInterdits,$string, $result)
-         * foreach ($result as $match) {
-         *  $numOfLetters = strlen($match);
-         *  $res = preg_replace($motInterdits,'#^\*{'.$numOfLetters.'}$#',$string)
-         * }
-        return $res*/
         $pattern = '#('.implode('|',self::TABOU_WORDS).')#i';
-        return preg_replace($pattern,'*******',$text);
+        return preg_replace_callback($pattern,
+            function ($matches) {
+            return str_pad('',strlen($matches[0]), '*');
+        }
+        ,$text);
 
     }
+
 
 }
